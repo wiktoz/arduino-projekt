@@ -208,11 +208,14 @@ void setup() {
     lcd.init();
   lcd.backlight();  
   lcd.clear();
+  lcd.setCursor(0,1);
+  lcd.print("<<    Play    >>");
     
     Serial.begin(9600);
  }
 
 void loop() {
+  delay(150);
   lcd.setCursor(0,0);
   lcd.print(songnames[currentSong]);
   
@@ -220,6 +223,8 @@ void loop() {
     currentSong++;
     if(currentSong >= 14) currentSong = 0;
     lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("<<    Play    >>");
     delay(150);
   }
   
@@ -227,15 +232,24 @@ void loop() {
     currentSong--;
     if(currentSong < 0) currentSong = 13;
     lcd.clear();
+    lcd.setCursor(0,1);
+    lcd.print("<<    Play    >>");
     delay(150);
   }
 
-  if(digitalRead(buttonStop)) { 
+  if(digitalRead(buttonStop)) {
+    delay(150); 
     playSong(currentSong);
   }
 }
 
-void playSong(int songNumber){  
+void playSong(int songNumber){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(songnames[currentSong]);
+  lcd.setCursor(0,1);
+  lcd.print("<<    Stop    >>");
+    
   thisNote = 0;
   size = sizes[songNumber];
   
@@ -261,8 +275,12 @@ void playSong(int songNumber){
       thisNote++;
     }
 
-    if(digitalRead(buttonStop)) break;
-    if(thisNote == size) break;
+    if(digitalRead(buttonStop) || thisNote == size) {
+      lcd.clear();
+      lcd.setCursor(0,1);
+      lcd.print("<<    Play    >>");
+      break;
+    }
   }
 }
 
